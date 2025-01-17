@@ -1,12 +1,14 @@
 import { Trash2, Plus, Minus } from 'lucide-react';
 import { cartItemAtom, subtotalAtom } from '../../hooks/UseCart';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useAtom } from 'jotai';
 
 const CartForm = () => {
   const [cartItems, setCartItems] = useAtom(cartItemAtom);
   const [subtotal] = useAtom(subtotalAtom);
+  const navigate = useNavigate();
 
   const updateQuantity = (id, change) => {
     const updatedCartItems = cartItems.map((item) =>
@@ -21,6 +23,25 @@ const CartForm = () => {
     const updatedCartItems = cartItems.filter((item) => item.id !== id);
     setCartItems(updatedCartItems);
   };
+  if(cartItems.length === 0){
+    return(
+      <div className="w-full max-w-2xl mx-auto p-8">
+      <div className="p-6 bg-white shadow-md rounded-lg">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Shopping Cart</h2>
+        <div className="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-lg space-y-4">
+          <h3 className="font-medium text-gray-900 text-lg">Your Cart is Empty</h3>
+          <button
+            className="px-4 py-2 text-white bg-black rounded-lg hover:bg-gray-600 transition duration-300"
+            onClick={() => navigate(-1)}
+          >
+            &larr; Go Back
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    )
+  }
 
   return (
     <div className="w-full max-w-2xl mx-auto p-8">

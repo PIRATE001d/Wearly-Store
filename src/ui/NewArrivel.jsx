@@ -1,23 +1,20 @@
-import { useEffect, useState } from 'react';
+import {useQuery} from '@tanstack/react-query';
 
 import { fetchNewArrivals } from '../services/ProductsApi';
 
 import { Link } from 'react-router-dom';
 
 function NewArrivel() {
-  const [products, setProducts] = useState([]);
+  const {data : products , isLoading , error} = useQuery({
+    queryFn : fetchNewArrivals,
+    queryKey : ['newArrivals'],
+    staleTime : 1000 * 60 * 5
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchNewArrivals();
-        setProducts(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchData();
-  }, []); // Empty dependency array ensures it runs only once on mount
+  });
+
+
+  if(isLoading) return <div>Loading...</div>
+  if(error) return <div>Error: {error.message}</div>
 
   return (
     <div>
